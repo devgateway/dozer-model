@@ -1,11 +1,21 @@
 package nl.dries.wicket.hibernate.dozer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import nl.dries.wicket.hibernate.dozer.model.AbstractOrganization;
+import nl.dries.wicket.hibernate.dozer.model.AbstractTreeObject;
+import nl.dries.wicket.hibernate.dozer.model.Adres;
+import nl.dries.wicket.hibernate.dozer.model.Company;
+import nl.dries.wicket.hibernate.dozer.model.DescTreeObject;
+import nl.dries.wicket.hibernate.dozer.model.MapObject;
+import nl.dries.wicket.hibernate.dozer.model.NonHibernateObject;
+import nl.dries.wicket.hibernate.dozer.model.Person;
+import nl.dries.wicket.hibernate.dozer.model.RootTreeObject;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.model.Model;
+import org.hibernate.Transaction;
+import org.hibernate.proxy.HibernateProxy;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,22 +28,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import nl.dries.wicket.hibernate.dozer.model.AbstractOrganization;
-import nl.dries.wicket.hibernate.dozer.model.AbstractTreeObject;
-import nl.dries.wicket.hibernate.dozer.model.Adres;
-import nl.dries.wicket.hibernate.dozer.model.Company;
-import nl.dries.wicket.hibernate.dozer.model.DescTreeObject;
-import nl.dries.wicket.hibernate.dozer.model.MapObject;
-import nl.dries.wicket.hibernate.dozer.model.NonHibernateObject;
-import nl.dries.wicket.hibernate.dozer.model.Person;
-import nl.dries.wicket.hibernate.dozer.model.RootTreeObject;
-
-import org.apache.wicket.ThreadContext;
-import org.apache.wicket.model.Model;
-import org.hibernate.proxy.HibernateProxy;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Test the {@link DozerModel}
@@ -90,8 +90,12 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		adres.setPerson(person);
 		person.getAdresses().add(adres);
 
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(person);
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		adres.setPerson((Person) getSession().load(Person.class, 1L)); // Forcing proxy
@@ -120,8 +124,12 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		adres.setPerson(person);
 		person.getAdresses().add(adres);
 
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(person);
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		person.setAdresses(Arrays.asList((Adres) getSession().load(Adres.class, 1L))); // Forcing proxy
@@ -232,6 +240,9 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 	@Test
 	public void testCollectionWithFlush()
 	{
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		Person person = new Person();
 		person.setId(1L);
 		person.setName("person");
@@ -245,6 +256,7 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		getSession().saveOrUpdate(adres);
 
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		DozerModel<Person> model = new DozerModel<>((Person) getSession().load(Person.class, 1L));
@@ -253,9 +265,6 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 
 		// Trigger attach
 		model.getObject();
-
-		// Force flush
-		getSession().flush();
 
 		// Check adress
 		assertEquals("street", model.getObject().getAdresses().get(0).getStreet());
@@ -286,6 +295,7 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		Person person = new Person();
 		person.setId(1L);
 		person.setName("person");
+
 		getSession().saveOrUpdate(person);
 
 		DozerModel<Person> model = new DozerModel<>(person);
@@ -294,9 +304,16 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 
 		model.getObject().setName("edited");
 		Person loaded = (Person) getSession().load(Person.class, 1L);
+
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(loaded);
 		getSession().saveOrUpdate(model.getObject());
+
 		getSession().flush();
+		transaction.commit();
+        getSession().clear();
 
 		loaded = (Person) getSession().load(Person.class, 1L);
 		assertEquals("edited", loaded.getName());
@@ -308,6 +325,7 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		Person person = new Person();
 		person.setId(1L);
 		person.setName("person");
+
 		getSession().saveOrUpdate(person);
 
 		person = (Person) getSession().load(Person.class, 1L);
@@ -323,6 +341,9 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 	 */
 	private AbstractTreeObject buildTree()
 	{
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		AbstractTreeObject root = new RootTreeObject(1L, "root");
 		getSession().saveOrUpdate(root);
 
@@ -342,6 +363,7 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		getSession().saveOrUpdate(c2l1);
 
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		return root;
@@ -353,6 +375,9 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 	@Test
 	public void testListModel()
 	{
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		Person p1 = new Person();
 		p1.setId(1L);
 		p1.setName("p1");
@@ -364,6 +389,7 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		getSession().saveOrUpdate(p2);
 
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		List<Person> list = new ArrayList<>();
@@ -410,9 +436,13 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		map.getMap().put("1", "one");
 		map.getMap().put("2", "two");
 
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(map);
 
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		closeSession();
@@ -463,10 +493,14 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 
 		company.getPersons().add(person);
 
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(person);
 		getSession().saveOrUpdate(company);
 
 		getSession().flush();
+        transaction.commit();
 		getSession().clear();
 
 		DozerModel<Company> model = new DozerModel<>((Company) getSession().load(Company.class, 1L));
@@ -490,10 +524,14 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 
 		company.getPersons().add(person);
 
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(person);
 		getSession().saveOrUpdate(company);
 
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		DozerModel<Company> model = new DozerModel<>((Company) getSession().load(Company.class, 1L));
@@ -522,8 +560,12 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		adres.setPerson(person);
 		person.getAdresses().add(adres);
 
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(person);
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		NonHibernateObject object = new NonHibernateObject();
@@ -553,7 +595,14 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		adres.setPerson(person);
 		person.getAdresses().add(adres);
 
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(person);
+
+        getSession().flush();
+        transaction.commit();
+        getSession().clear();
 
 		NonHibernateObject object = new NonHibernateObject();
 		object.setPerson(person);
@@ -603,9 +652,14 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 		adres.setId(1L);
 		adres.setStreet("test");
 		obj.getAdresses().add(adres);
+
+        final Transaction transaction = getSession().getTransaction();
+        transaction.begin();
+
 		getSession().saveOrUpdate(adres);
 
 		getSession().flush();
+		transaction.commit();
 		getSession().clear();
 
 		DozerModel<MapObject> model = new DozerModel<>((MapObject) getSession().load(MapObject.class, 1L));
