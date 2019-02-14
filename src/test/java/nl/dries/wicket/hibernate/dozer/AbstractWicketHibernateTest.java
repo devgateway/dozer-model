@@ -1,16 +1,16 @@
 package nl.dries.wicket.hibernate.dozer;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.apache.wicket.util.tester.WicketTester;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
-import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
+import org.springframework.orm.hibernate5.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Hibernate/Wicket enabled base test class

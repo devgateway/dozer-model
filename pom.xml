@@ -186,8 +186,8 @@
 
 	<properties>
         <wicket.version>8.3.0</wicket.version>
-		<hibernate.version>4.3.11.Final</hibernate.version>
-		<spring.version>4.3.22.RELEASE</spring.version>
+		<hibernate.version>5.4.1.Final</hibernate.version>
+		<spring.version>5.1.5.RELEASE</spring.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

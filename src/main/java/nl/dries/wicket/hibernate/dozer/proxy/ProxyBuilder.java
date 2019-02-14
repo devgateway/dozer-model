@@ -1,11 +1,5 @@
 package nl.dries.wicket.hibernate.dozer.proxy;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
@@ -14,13 +8,20 @@ import nl.dries.wicket.hibernate.dozer.helper.ObjectHelper;
 import nl.dries.wicket.hibernate.dozer.properties.AbstractPropertyDefinition;
 import nl.dries.wicket.hibernate.dozer.properties.CollectionPropertyDefinition;
 import nl.dries.wicket.hibernate.dozer.properties.SimplePropertyDefinition;
-
+import org.hibernate.HibernateException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Creates proxies
@@ -240,14 +241,10 @@ public class ProxyBuilder
 			return realValue;
 		}
 
-		/**
-		 * @see org.hibernate.proxy.LazyInitializer#getImplementation(org.hibernate.engine.spi.SessionImplementor)
-		 */
-		@Override
-		public Object getImplementation(SessionImplementor session)
-		{
-			return getImplementation();
-		}
+        @Override
+        public Object getImplementation(SharedSessionContractImplementor sharedSessionContractImplementor) throws HibernateException {
+            return getImplementation();
+        }
 
 		/**
 		 * @see org.hibernate.proxy.LazyInitializer#setImplementation(java.lang.Object)
@@ -295,14 +292,10 @@ public class ProxyBuilder
 				.getHibernateSession(getPersistentClass());
 		}
 
-		/**
-		 * @see org.hibernate.proxy.LazyInitializer#setSession(org.hibernate.engine.spi.SessionImplementor)
-		 */
-		@Override
-		public void setSession(SessionImplementor session)
-		{
-			// Not used
-		}
+        @Override
+        public void setSession(SharedSessionContractImplementor sharedSessionContractImplementor) throws HibernateException {
+            // Not used
+        }
 
 		/**
 		 * @see org.hibernate.proxy.LazyInitializer#unsetSession()
