@@ -174,12 +174,20 @@
 			<version>2.2.8</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.16</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 	<properties>
-		<wicket.version>6.15.0</wicket.version>
-		<hibernate.version>4.2.12.Final</hibernate.version>
-		<spring.version>4.0.4.RELEASE</spring.version>
+        <wicket.version>8.3.0</wicket.version>
+		<hibernate.version>4.3.11.Final</hibernate.version>
+		<spring.version>4.3.22.RELEASE</spring.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
