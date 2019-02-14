@@ -18,8 +18,10 @@ import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
 import nl.dries.wicket.hibernate.dozer.proxy.ProxyBuilder;
 
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.internal.SessionImpl;
 import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.HibernateProxyHelper;
 import org.hibernate.proxy.LazyInitializer;
@@ -79,7 +81,14 @@ public class BasicObjectVisitor implements VisitorStrategy
 					Class<?> implType = HibernateProxyHelper.getClassWithoutInitializingProxy(value);
 					
 					SessionImpl sessionImpl = (SessionImpl) sessionFinder.getHibernateSession(implType);
-					ClassMetadata metadata = sessionImpl.getFactory().getClassMetadata(implType);
+                    final MetamodelImplementor metamodel = sessionImpl.getFactory().getMetamodel();
+                    ClassMetadata metadata = null;
+                    try {
+                        metadata = (ClassMetadata) metamodel.entityPersister(implType);
+                    } catch (HibernateException ex) {
+                        // do nothing...
+                    }
+
 					if (metadata == null)
 					{
 						toWalk.add(value);
