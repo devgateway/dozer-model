@@ -3,7 +3,7 @@
 
     <groupId>nl.dries.wicket.hibernate</groupId>
     <artifactId>dozer-hibernate-model</artifactId>
-    <version>0.3.7-17022019</version>
+    <version>0.3.7-17022020-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Wicket dozer Hibernate model</name>
@@ -36,7 +36,7 @@
         <url>
             scm:git:git@github.com:devgateway/dozer-model.git
         </url>
-        <tag>dozer-hibernate-model-0.3.7-17022019</tag>
+        <tag>dozer-hibernate-model-0.3.7-14022019</tag>
     </scm>
 
     <build>
