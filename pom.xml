@@ -4,11 +4,11 @@
 
 	<groupId>nl.dries.wicket.hibernate</groupId>
 	<artifactId>dozer-hibernate-model</artifactId>
-	<version>0.3.7-14022019</version>
+	<version>0.3.7-14022019-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Wicket dozer Hibernate model</name>
-	
+
 	<developers>
 		<developer>
 			<id>schulten</id>
@@ -18,21 +18,14 @@
 			<organizationUrl>http://www.topicuszorg.nl/</organizationUrl>
 		</developer>
 	</developers>
-	
-	<distributionManagement>
-		<repository>
-			<id>deployment.external</id>
-			<name>external Release Repository</name>
-			<url>https://vaatwasser.topicuszorg.nl/nexus/content/repositories/external-releases/</url>
-			<uniqueVersion>false</uniqueVersion>
-		</repository>
-		<snapshotRepository>
-			<id>deployment.external</id>
-			<name>external snapshot Repository</name>
-			<url>https://vaatwasser.topicuszorg.nl/nexus/content/repositories/external-snapshot/</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-devgateway-dozer-hibernate-model</id>
+            <name>devgateway-dozer-hibernate-model</name>
+            <url>https://api.bintray.com/maven/devgateway/dozer-hibernate-model/dozer-hibernate-model/;publish=1</url>
+        </repository>
+    </distributionManagement>
 	
 	<scm>
 		<connection>
