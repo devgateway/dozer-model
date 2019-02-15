@@ -119,7 +119,7 @@ public class DozerListModel<T> implements IModel<List<T>>
 	}
 
 	/**
-	 * @see java.util.List#remove(Object))
+	 * @see java.util.List#remove(Object)
 	 */
 	public boolean remove(T object)
 	{

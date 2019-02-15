@@ -673,7 +673,7 @@ public class DozerModelTest extends AbstractWicketHibernateTest
 	 * Detach
 	 * 
 	 * @throws RuntimeException
-	 * @throws {@link ReflectiveOperationException}
+	 * @throws ReflectiveOperationException
 	 */
 	@Test
 	public void testDetachWhenNoEndingRequest() throws RuntimeException, ReflectiveOperationException

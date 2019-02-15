@@ -23,7 +23,7 @@ public class SimplePropertyDefinition extends AbstractPropertyDefinition
 	 *            the property owner
 	 * @param property
 	 *            the name of the field
-	 * @parma modelCallback the {@link ModelCallback}
+	 * @param modelCallback the {@link ModelCallback}
 	 * @param hibernateProperty
 	 *            it's {@link HibernateProperty}
 	 */
