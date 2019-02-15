@@ -3,7 +3,7 @@
 
     <groupId>nl.dries.wicket.hibernate</groupId>
     <artifactId>dozer-hibernate-model</artifactId>
-    <version>0.3.7-18022020-SNAPSHOT</version>
+    <version>0.3.7-19022019-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Wicket dozer Hibernate model</name>
@@ -22,7 +22,7 @@
         <repository>
             <id>bintray-devgateway-dozer-hibernate-model</id>
             <name>devgateway-dozer-hibernate-model</name>
-            <url>https://api.bintray.com/maven/devgateway/dozer-hibernate-model/[PACKAGE_NAME]/;publish=1</url>
+            <url>https://api.bintray.com/maven/devgateway/dozer-hibernate-model/dozer-hibernate-model/;publish=1</url>
         </repository>
     </distributionManagement>
 
