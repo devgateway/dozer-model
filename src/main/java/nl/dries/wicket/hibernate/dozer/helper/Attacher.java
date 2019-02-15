@@ -7,6 +7,7 @@ import nl.dries.wicket.hibernate.dozer.properties.AbstractPropertyDefinition;
 import nl.dries.wicket.hibernate.dozer.properties.CollectionPropertyDefinition;
 import nl.dries.wicket.hibernate.dozer.properties.SimplePropertyDefinition;
 
+import org.hibernate.HibernateException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.engine.spi.CollectionKey;
 import org.hibernate.engine.spi.EntityKey;
@@ -14,6 +15,7 @@ import org.hibernate.engine.spi.PersistenceContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.persister.collection.CollectionPersister;
 import org.hibernate.persister.entity.EntityPersister;
 
@@ -97,7 +99,13 @@ public class Attacher
 		CollectionPersister persister = getCollectionPersister(def, sessionImpl);
 		PersistenceContext persistenceContext = sessionImpl.getPersistenceContext();
 
-		ClassMetadata metadata = sessionImpl.getFactory().getClassMetadata(def.getOwner().getClass());
+        final MetamodelImplementor metamodel = sessionImpl.getFactory().getMetamodel();
+        ClassMetadata metadata = null;
+        try {
+            metadata = (ClassMetadata) metamodel.entityPersister(def.getOwner().getClass());
+        } catch (HibernateException ex) {
+            // do nothing...
+        }
 		Serializable identifier = metadata.getIdentifier(def.getOwner(), sessionImpl);
 
 		CollectionKey key = new CollectionKey(persister, identifier);

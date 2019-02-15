@@ -4,7 +4,7 @@
 
 	<groupId>nl.dries.wicket.hibernate</groupId>
 	<artifactId>dozer-hibernate-model</artifactId>
-	<version>0.3.7-SNAPSHOT</version>
+	<version>0.3.7-14022019</version>
 	<packaging>jar</packaging>
 
 	<name>Wicket dozer Hibernate model</name>
@@ -174,12 +174,20 @@
 			<version>2.2.8</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.16</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 	<properties>
-		<wicket.version>6.15.0</wicket.version>
-		<hibernate.version>4.2.12.Final</hibernate.version>
-		<spring.version>4.0.4.RELEASE</spring.version>
+        <wicket.version>8.3.0</wicket.version>
+		<hibernate.version>5.4.1.Final</hibernate.version>
+		<spring.version>5.1.5.RELEASE</spring.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

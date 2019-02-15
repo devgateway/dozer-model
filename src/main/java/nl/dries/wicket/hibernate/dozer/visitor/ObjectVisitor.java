@@ -1,19 +1,21 @@
 package nl.dries.wicket.hibernate.dozer.visitor;
 
+import nl.dries.wicket.hibernate.dozer.SessionFinder;
+import nl.dries.wicket.hibernate.dozer.helper.ModelCallback;
+import nl.dries.wicket.hibernate.dozer.helper.Seen;
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.metamodel.spi.MetamodelImplementor;
+import org.hibernate.proxy.HibernateProxyHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import nl.dries.wicket.hibernate.dozer.SessionFinder;
-import nl.dries.wicket.hibernate.dozer.helper.ModelCallback;
-import nl.dries.wicket.hibernate.dozer.helper.Seen;
-
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.proxy.HibernateProxyHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Walker to traverse an object graph, and remove Hibernate state
@@ -79,12 +81,20 @@ public class ObjectVisitor<T>
 			return;
 		}
 
-		SessionFactoryImplementor factory = sessionImpl.getFactory();
-
+		final SessionFactoryImplementor factory = sessionImpl.getFactory();
 		final VisitorStrategy strategy;
-		if (factory.getClassMetadata(objectClass) != null)
+
+        final MetamodelImplementor metamodel = factory.getMetamodel();
+        ClassMetadata classMetadata = null;
+        try {
+            classMetadata = (ClassMetadata) metamodel.entityPersister(objectClass);
+        } catch (HibernateException ex) {
+            // do nothing...
+        }
+
+		if (classMetadata != null)
 		{
-			strategy = new HibernateObjectVisitor(sessionImpl, callback, factory.getClassMetadata(objectClass));
+			strategy = new HibernateObjectVisitor(sessionImpl, callback, classMetadata);
 		}
 		else if (current instanceof Collection<?>)
 		{
