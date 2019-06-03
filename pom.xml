@@ -3,7 +3,7 @@
 
     <groupId>nl.dries.wicket.hibernate</groupId>
     <artifactId>dozer-hibernate-model</artifactId>
-    <version>0.3.7-19022020-SNAPSHOT</version>
+    <version>0.3.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Wicket dozer Hibernate model</name>
@@ -36,7 +36,7 @@
         <url>
             scm:git:git@github.com:devgateway/dozer-model.git
         </url>
-        <tag>dozer-hibernate-model-0.3.7-14022019</tag>
+        <tag>dozer-hibernate-model-0.3.8</tag>
     </scm>
 
     <build>
@@ -73,6 +73,25 @@
             </testResource>
         </testResources>
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -181,6 +200,7 @@
         <wicket.version>8.3.0</wicket.version>
         <hibernate.version>5.4.1.Final</hibernate.version>
         <spring.version>5.1.5.RELEASE</spring.version>
+        <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
