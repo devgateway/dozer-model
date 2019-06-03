@@ -1,12 +1,9 @@
 package nl.dries.wicket.hibernate.dozer.helper;
 
-import java.io.Serializable;
-
 import nl.dries.wicket.hibernate.dozer.SessionFinder;
 import nl.dries.wicket.hibernate.dozer.properties.AbstractPropertyDefinition;
 import nl.dries.wicket.hibernate.dozer.properties.CollectionPropertyDefinition;
 import nl.dries.wicket.hibernate.dozer.properties.SimplePropertyDefinition;
-
 import org.hibernate.HibernateException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.engine.spi.CollectionKey;
@@ -14,10 +11,13 @@ import org.hibernate.engine.spi.EntityKey;
 import org.hibernate.engine.spi.PersistenceContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.persister.collection.CollectionPersister;
 import org.hibernate.persister.entity.EntityPersister;
+
+import java.io.Serializable;
 
 /**
  * Hibernate object (re-)attacher
@@ -106,7 +106,7 @@ public class Attacher
         } catch (HibernateException ex) {
             // do nothing...
         }
-		Serializable identifier = metadata.getIdentifier(def.getOwner(), sessionImpl);
+		Serializable identifier = metadata.getIdentifier(def.getOwner(), (SharedSessionContractImplementor) sessionImpl);
 
 		CollectionKey key = new CollectionKey(persister, identifier);
 		PersistentCollection collection = persistenceContext.getCollection(key);
@@ -133,7 +133,7 @@ public class Attacher
 	protected EntityPersister getPersister(HibernateProperty val, SessionImplementor sessionImpl)
 	{
 		SessionFactoryImplementor factory = sessionImpl.getFactory();
-		return factory.getEntityPersister(val.getEntityClass().getName());
+		return factory.getMetamodel().entityPersister(val.getEntityClass().getName());
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class Attacher
 		SessionImplementor sessionImpl)
 	{
 		SessionFactoryImplementor factory = sessionImpl.getFactory();
-		return factory.getCollectionPersister(def.getRole());
+		return factory.getMetamodel().collectionPersister(def.getRole());
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class Attacher
 	protected EntityPersister getOwnPersister(Object owner, SessionImplementor sessionImpl)
 	{
 		SessionFactoryImplementor factory = sessionImpl.getFactory();
-		return factory.getEntityPersister(owner.getClass().getName());
+		return factory.getMetamodel().entityPersister(owner.getClass().getName());
 	}
 
 	/**
