@@ -20,7 +20,7 @@ import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.internal.PersistentSortedMap;
 import org.hibernate.collection.internal.PersistentSortedSet;
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,22 +82,23 @@ public enum HibernateCollectionType
 	 * Creates a instance of the {@link PersistentCollection} defined by this type
 	 * 
 	 * @param sessionImpl
-	 *            {@link SessionImplementor}
+	 *            {@link SharedSessionContractImplementor}
 	 * @return {@link PersistentCollection} instance
 	 */
-	public PersistentCollection createCollection(SessionImplementor sessionImpl)
+	public PersistentCollection createCollection(SharedSessionContractImplementor sessionImpl)
 	{
 		PersistentCollection collection = null;
 
 		try
 		{
 			Constructor<? extends PersistentCollection> constructor = hibernateCollectionClass
-				.getConstructor(SessionImplementor.class);
+				.getConstructor(SharedSessionContractImplementor.class);
 			collection = constructor.newInstance(sessionImpl);
 		}
 		catch (NoSuchMethodException | SecurityException e)
 		{
-			LOG.error("Persistent collection type {} has no SessionImplementor constructor", hibernateCollectionClass);
+			LOG.error("Persistent collection type {} has no SharedSessionContractImplementor constructor",
+					hibernateCollectionClass);
 		}
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 		{

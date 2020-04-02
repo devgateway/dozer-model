@@ -5,7 +5,7 @@ import nl.dries.wicket.hibernate.dozer.helper.ModelCallback;
 import nl.dries.wicket.hibernate.dozer.helper.Seen;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.proxy.HibernateProxyHelper;
@@ -73,7 +73,7 @@ public class ObjectVisitor<T>
 	{
 		Class<?> objectClass = HibernateProxyHelper.getClassWithoutInitializingProxy(current);
 
-		SessionImplementor sessionImpl = (SessionImplementor) sessionFinder.getHibernateSession(objectClass);
+		SharedSessionContractImplementor sessionImpl = (SharedSessionContractImplementor) sessionFinder.getHibernateSession(objectClass);
 
 		if (sessionImpl == null)
 		{
