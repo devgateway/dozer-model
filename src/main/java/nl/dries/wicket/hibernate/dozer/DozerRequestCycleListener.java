@@ -1,7 +1,7 @@
 package nl.dries.wicket.hibernate.dozer;
 
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.request.cycle.IRequestCycleListener;
+import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -11,7 +11,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * 
  * @author dries
  */
-public class DozerRequestCycleListener implements IRequestCycleListener {
+public class DozerRequestCycleListener extends AbstractRequestCycleListener {
 	/**
 	 * Meta data key, records when we are ending a request
 	 */

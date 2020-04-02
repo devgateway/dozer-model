@@ -10,7 +10,6 @@ import org.hibernate.engine.spi.CollectionKey;
 import org.hibernate.engine.spi.EntityKey;
 import org.hibernate.engine.spi.PersistenceContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
@@ -53,8 +52,8 @@ public class Attacher
 	 */
 	protected Object attach(SimplePropertyDefinition def)
 	{
-		SessionImplementor sessionImpl = (SessionImplementor) sessionFinder.getHibernateSession(def
-			.getHibernateProperty().getEntityClass());
+		SharedSessionContractImplementor sessionImpl = (SharedSessionContractImplementor)
+				sessionFinder.getHibernateSession(def.getHibernateProperty().getEntityClass());
 
 		EntityPersister persister = getPersister(def.getHibernateProperty(), sessionImpl);
 		PersistenceContext persistenceContext = sessionImpl.getPersistenceContext();
@@ -93,8 +92,8 @@ public class Attacher
 	 */
 	protected Object attach(CollectionPropertyDefinition def)
 	{
-		SessionImplementor sessionImpl = (SessionImplementor) sessionFinder.getHibernateSession(def.getOwner()
-			.getClass());
+		SharedSessionContractImplementor sessionImpl = (SharedSessionContractImplementor)
+				sessionFinder.getHibernateSession(def.getOwner().getClass());
 
 		CollectionPersister persister = getCollectionPersister(def, sessionImpl);
 		PersistenceContext persistenceContext = sessionImpl.getPersistenceContext();
@@ -106,7 +105,7 @@ public class Attacher
         } catch (HibernateException ex) {
             // do nothing...
         }
-		Serializable identifier = metadata.getIdentifier(def.getOwner(), (SharedSessionContractImplementor) sessionImpl);
+		Serializable identifier = metadata.getIdentifier(def.getOwner(), sessionImpl);
 
 		CollectionKey key = new CollectionKey(persister, identifier);
 		PersistentCollection collection = persistenceContext.getCollection(key);
@@ -130,7 +129,7 @@ public class Attacher
 	 *            the {@link HibernateProperty}
 	 * @return {@link EntityPersister}
 	 */
-	protected EntityPersister getPersister(HibernateProperty val, SessionImplementor sessionImpl)
+	protected EntityPersister getPersister(HibernateProperty val, SharedSessionContractImplementor sessionImpl)
 	{
 		SessionFactoryImplementor factory = sessionImpl.getFactory();
 		return factory.getMetamodel().entityPersister(val.getEntityClass().getName());
@@ -144,7 +143,7 @@ public class Attacher
 	 * @return a {@link CollectionPersister}
 	 */
 	protected CollectionPersister getCollectionPersister(CollectionPropertyDefinition def,
-		SessionImplementor sessionImpl)
+			SharedSessionContractImplementor sessionImpl)
 	{
 		SessionFactoryImplementor factory = sessionImpl.getFactory();
 		return factory.getMetamodel().collectionPersister(def.getRole());
@@ -155,7 +154,7 @@ public class Attacher
 	 *            the owner
 	 * @return the {@link EntityPersister} for the object to attach
 	 */
-	protected EntityPersister getOwnPersister(Object owner, SessionImplementor sessionImpl)
+	protected EntityPersister getOwnPersister(Object owner, SharedSessionContractImplementor sessionImpl)
 	{
 		SessionFactoryImplementor factory = sessionImpl.getFactory();
 		return factory.getMetamodel().entityPersister(owner.getClass().getName());

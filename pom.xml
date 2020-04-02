@@ -3,7 +3,7 @@
 
     <groupId>nl.dries.wicket.hibernate</groupId>
     <artifactId>dozer-hibernate-model</artifactId>
-    <version>0.3.8-SNAPSHOT</version>
+    <version>0.3.9-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Wicket dozer Hibernate model</name>
@@ -36,7 +36,7 @@
         <url>
             scm:git:git@github.com:devgateway/dozer-model.git
         </url>
-        <tag>dozer-hibernate-model-0.3.8-SNAPSHOT</tag>
+        <tag>dozer-hibernate-model-0.3.8</tag>
     </scm>
 
     <build>
@@ -89,7 +89,6 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -181,7 +180,9 @@
         <wicket.version>8.3.0</wicket.version>
         <hibernate.version>5.4.1.Final</hibernate.version>
         <spring.version>5.1.5.RELEASE</spring.version>
+        <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <doclint>none</doclint>
     </properties>
 </project>
