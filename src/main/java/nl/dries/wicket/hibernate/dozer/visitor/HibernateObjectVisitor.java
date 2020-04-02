@@ -22,7 +22,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.collection.internal.PersistentMap;
 import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -42,7 +42,7 @@ public class HibernateObjectVisitor implements VisitorStrategy
 	private static final Logger LOG = LoggerFactory.getLogger(HibernateObjectVisitor.class);
 
 	/** */
-	private final SessionImplementor sessionImpl;
+	private final SharedSessionContractImplementor sessionImpl;
 
 	/** */
 	private final ModelCallback callback;
@@ -57,7 +57,7 @@ public class HibernateObjectVisitor implements VisitorStrategy
 	 * @param callback
 	 * @param metadata
 	 */
-	public HibernateObjectVisitor(SessionImplementor sessionImpl, ModelCallback callback, ClassMetadata metadata)
+	public HibernateObjectVisitor(SharedSessionContractImplementor sessionImpl, ModelCallback callback, ClassMetadata metadata)
 	{
 		this.sessionImpl = sessionImpl;
 		this.callback = callback;

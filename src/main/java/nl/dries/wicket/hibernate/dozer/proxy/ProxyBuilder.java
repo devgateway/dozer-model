@@ -10,7 +10,6 @@ import nl.dries.wicket.hibernate.dozer.properties.CollectionPropertyDefinition;
 import nl.dries.wicket.hibernate.dozer.properties.SimplePropertyDefinition;
 import org.hibernate.HibernateException;
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -286,9 +285,9 @@ public class ProxyBuilder
 		 * @see org.hibernate.proxy.LazyInitializer#getSession()
 		 */
 		@Override
-		public SessionImplementor getSession()
+		public SharedSessionContractImplementor getSession()
 		{
-			return (SessionImplementor) property.getModelCallback().getSessionFinder()
+			return (SharedSessionContractImplementor) property.getModelCallback().getSessionFinder()
 				.getHibernateSession(getPersistentClass());
 		}
 
